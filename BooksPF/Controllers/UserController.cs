@@ -1,5 +1,7 @@
 ﻿using BooksPF.Core.Abstract;
 using BooksPF.Models;
+using BooksPF.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -11,62 +13,61 @@ using System.Threading.Tasks;
 
 namespace BooksPF.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
+    [AllowAnonymous]
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
-        private readonly IOptions<AuthOptions> authOptions;
-        public UserController(IUserService userService,IOptions<AuthOptions> authOptions)
+        private readonly AuthOptions authOptions;
+        private readonly TokenGenerator tokenGenerator;
+        public UserController(IUserService userService,IOptions<AuthOptions> authOptions,TokenGenerator tokenGenerator)
         {
             this.userService = userService;
-            this.authOptions = authOptions;
+            this.authOptions = authOptions.Value;
+            this.tokenGenerator = tokenGenerator;
         }
-        [HttpPost]
-        [Route("/token")]
-        public async Task<IActionResult> Login([FromBody]Login login)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody]LoginViewModel model)
         {
-            var user = await AuthentificateUser(login.UserName, login.Password);
-
+            var user = await AuthentificateUser(model.Login, model.Password);
             if(user!= null)
             {
-                return Ok(GenerateJWT(user));
+                var claims = new List<Claim>()
+                {
+                    new Claim(JwtRegisteredClaimNames.UniqueName,user.Login),
+                    new Claim(JwtRegisteredClaimNames.Sub,user.Id)
+                };
+
+                var accessToken = tokenGenerator.GenerateAccessToken(claims);
+                var refreshToken = tokenGenerator.GenerateRefreshToken(claims);
+                return Ok(new AuthentificatedResponse(accessToken,refreshToken));
             }
             return Unauthorized();
         }
-        [HttpPost]
-        public IActionResult AddUser(User user)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
-            userService.AddUser(user);
-            return Ok(user);
+            if (await userService.UserExist(model.Login))
+            {
+                return Unauthorized("Login is busy");
+            }
+
+            var user = await userService.AddUser(new Models.User(model.Login, model.Password));
+            var claims = new List<Claim>()
+                {
+                    new Claim(JwtRegisteredClaimNames.UniqueName,user.Login),
+                    new Claim(JwtRegisteredClaimNames.Sub,user.Id)
+                };
+
+            var accessToken = tokenGenerator.GenerateAccessToken(claims);
+            var refreshToken = tokenGenerator.GenerateRefreshToken(claims);
+            return Ok(new AuthentificatedResponse(accessToken, refreshToken));
         }
         private async Task<User> AuthentificateUser(string login,string password)
         {
-            var user = await userService.GetUser(login, password);
+            var user = await userService.AuthentificateUser(login,password);
             return user;
-        }
-
-        private string GenerateJWT(User user)
-        {
-            var authParams = authOptions.Value;
-            var securityKey = authParams.GetSymmetricSecurityKey();
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>()
-            {
-                new Claim(JwtRegisteredClaimNames.UniqueName,user.UserName),
-                new Claim(JwtRegisteredClaimNames.Sub,user.Id)
-            };
-
-            var token = new JwtSecurityToken(
-                authParams.Issuer,
-                authParams.Audience,
-                claims,
-                expires: DateTime.Now.AddSeconds(authParams.Lifetime),
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

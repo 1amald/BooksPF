@@ -14,14 +14,24 @@ namespace BooksPF.Core.Mongo
         }
         public async Task<User> AddUser(User user)
         {
+            if(await UserExist(user.Login))
+            {
+                return null;
+            }
             await users.InsertOneAsync(user);
             return user;
         }
 
-        public async Task<User> GetUser(string login, string password)
+        public async Task<User> AuthentificateUser(string login,string password)
         {
-            var user = await users.Find(u => u.UserName == login && u.Password == password).FirstOrDefaultAsync();
-            return user;
+            var result = await users.Find(u => u.Login == login && u.Password == password).FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<bool> UserExist(string login)
+        {
+            var result = await users.Find(u => u.Login == login).FirstOrDefaultAsync();
+            return result != null;
         }
     }
 }

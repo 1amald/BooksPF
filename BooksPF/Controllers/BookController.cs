@@ -1,12 +1,14 @@
 ﻿using BooksPF.Core.Abstract;
 using BooksPF.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace BooksPF.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
+    [Authorize]
     public class BookController : ControllerBase
     {
         private readonly IBookService bookService;
@@ -15,35 +17,29 @@ namespace BooksPF.Controllers
             this.bookService = bookService;
         }
 
-        [HttpGet]
+        [HttpGet("list")]
         public async Task<IActionResult> GetAllBooks()
         {
             var books = await bookService.GetAllBooks();
             return Ok(books);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddBook(Book book)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateBook(Book book)
         {
+            book.HolderName = User.Identity.Name;
             var result = await bookService.AddBook(book);
             return Ok(result);
         }
 
-        [HttpGet("{id}",Name = "GetBook")]
-        public async Task<IActionResult> GetBook(string id)
-        {
-            var book = await bookService.GetBookById(id);
-            return Ok(book);
-        }
-
-        [HttpPut]
+        [HttpPut("edit")]
         public async Task<IActionResult> UpdateBook(Book book)
         {
             await bookService.UpdateBook(book);
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> DeleteBook(string id)
         {
             await bookService .DeleteBook(id);

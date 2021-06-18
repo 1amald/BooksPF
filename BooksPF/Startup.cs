@@ -2,13 +2,16 @@ using BooksPF.Core;
 using BooksPF.Core.Abstract;
 using BooksPF.Core.Mongo;
 using BooksPF.Models;
+using BooksPF.ViewModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
+using System;
 
 namespace BooksPF
 {
@@ -23,13 +26,43 @@ namespace BooksPF
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var authOptions = Configuration.GetSection("Auth");
+            services.AddControllers();
+
+            var authOptions = Configuration.GetSection("Auth").Get<AuthOptions>();
+            services.Configure<AuthOptions>(Configuration.GetSection("Auth"));
             services.Configure<BooksPFDbConfig>(Configuration);
-            services.Configure<AuthOptions>(authOptions);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.RequireHttpsMetadata = false;
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = authOptions.Issuer,
+                        ValidateAudience = true,
+                        ValidAudience = authOptions.Audience,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = authOptions.GetSymmetricSecurityAccessKey(),
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            services.AddCors(options =>
+            {
+
+                options.AddDefaultPolicy( builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            });
+
+            services.AddSingleton<TokenGenerator>();
             services.AddSingleton<IDbClient, DbClient>();
             services.AddTransient<IBookService, BookService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddControllers();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BooksPF", Version = "v1" });
@@ -47,9 +80,10 @@ namespace BooksPF
 
             app.UseHttpsRedirection();
 
+            app.UseCors();
             app.UseRouting();
-            
-            app.UseAuthorization();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
