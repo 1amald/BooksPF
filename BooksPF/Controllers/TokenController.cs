@@ -25,7 +25,7 @@ namespace BooksPF.Controllers
             this.userService = userService;
         }
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody]string refreshToken)
+        public async Task<IActionResult> Refresh([FromHeader]string refreshToken)
         {
             string id;
             string login;
@@ -66,6 +66,7 @@ namespace BooksPF.Controllers
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
             };
 
             if (validator.CanReadToken(refreshToken))

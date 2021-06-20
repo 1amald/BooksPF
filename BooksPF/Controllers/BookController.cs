@@ -20,7 +20,8 @@ namespace BooksPF.Controllers
         [HttpGet("list")]
         public async Task<IActionResult> GetAllBooks()
         {
-            var books = await bookService.GetAllBooks();
+            var customerName = User.Identity.Name;
+            var books = await bookService.GetAllBooks(customerName);
             return Ok(books);
         }
 

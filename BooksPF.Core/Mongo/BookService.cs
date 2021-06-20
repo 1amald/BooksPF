@@ -16,9 +16,13 @@ namespace BooksPF.Core.Mongo
             books = client.GetBooksCollection();
         }
 
-        public async Task<IEnumerable<Book>> GetAllBooks()
+        public async Task<IEnumerable<Book>> GetAllBooks(string customerName)
         {
-            return await books.Find(_ => true).ToListAsync();
+            return await books.Find(b => b.IsPublic || b.HolderName == customerName).ToListAsync();
+        }
+        public async Task<IEnumerable<Book>> GetUserBooks(string customerName)
+        {
+            return await books.Find(b => b.HolderName == customerName).ToListAsync();
         }
 
         public async Task<Book> AddBook(Book book)
