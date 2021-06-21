@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Form, Modal, Button, InputGroup, FormControl } from "react-bootstrap";
+import { Form, Modal, Button } from "react-bootstrap";
 import { NewBook, EditBook } from '../services/books';
 
 export const NewBookModal = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
     return <div>
         <Button onClick={handleShow} className='btn btn-success'>New Book</Button>
-        <BookModal note={null} handleFormSubmit={NewBook} show={show} handleClose={handleClose} />
+        <BookModal book={null} handleFormSubmit={NewBook} show={show} handleClose={handleClose}/>
     </div>
 }
 
@@ -18,13 +17,14 @@ export const EditBookModal = ({ book }) => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
     return <div>
         <Button onClick={handleShow} className='btn btn-warning'>Edit</Button>
-        <BookModal book={book} handleFormSubmit={EditBook} show={show} handleClose={handleClose} />
+        <BookModal book={book} handleFormSubmit={EditBook} show={show} handleClose={handleClose}/>
     </div>
 }
 
-const BookModal = ({ book, handleFormSubmit, show, handleClose }) => {
+const BookModal = ({ book, handleFormSubmit,show,handleClose }) => {
     const [modalBook, setModalBook] = useState({});
     const dispatch = useDispatch();
 
@@ -42,18 +42,22 @@ const BookModal = ({ book, handleFormSubmit, show, handleClose }) => {
                 handleFormSubmit(dispatch, modalBook);
             }}>
                 <Modal.Body>
-                    <InputGroup>
-                        <FormControl value={modalBook === undefined ? '' : modalBook.title}
-                            onChange={event => setModalBook({ ...modalBook, value: event.target.value })}/> 
-                    </InputGroup>
+                    <Form.Group>
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control type="text" placeholder="Enter book title" value={modalBook === null ? '' : modalBook.title}
+                            onChange={event => setModalBook({ ...modalBook, title: event.target.value })} />
+                        <Form.Label>Author</Form.Label>
+                        <Form.Control type="text" placeholder="Enter book author" value={modalBook === null ? '' : modalBook.author}
+                            onChange={event => setModalBook({ ...modalBook, author: event.target.value })} />
+                    </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
-            </Button>
+                    </Button>
                     <Button type='submit' variant="primary" onClick={handleClose}>
                         Save
-            </Button>
+                    </Button>
                 </Modal.Footer>
             </Form>
         </Modal>

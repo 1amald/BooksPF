@@ -13,14 +13,13 @@ export function BooksTable(){
     },[]);
 
     return <table className ='table table-white '>
-        
         <tbody>
             {
                 books.map(n=> 
                 <tr>
                     <td>{n.author}</td>
                     <td>{n.title}</td>
-                    <td>{n.publisher}</td>
+                    <td>{n.holderName}</td>
                     <td><EditBookModal book = {n}/></td>
                     <td>
                         <Button className = 'btn btn-danger' onClick ={() => DeleteBook(dispatch,n)} value ="Delete">Delete</Button>

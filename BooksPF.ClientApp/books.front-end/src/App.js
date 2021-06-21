@@ -6,10 +6,8 @@ import {NewBookModal} from './components/BookModal';
 function App() {
   return (
     <div className="App">
-      <h1>My Books</h1>
-      
       <div className ='content'>
-        <NewBookModal/>
+        <NewBookModal />
         <BooksTable/>
       </div>
     </div>

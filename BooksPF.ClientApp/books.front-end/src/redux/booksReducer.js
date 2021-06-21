@@ -38,7 +38,8 @@ export default function BooksReducer(state = initialState, action) {
             return { ...state, books: [...books] };
 
         case ActionTypes.NEW_BOOK:
-            return {...state,books:[...books, action.payload]}
+            console.log('doshel do reducera');
+            return {...state, books: [...state.books, action.payload]}
 
         default:
             return state;

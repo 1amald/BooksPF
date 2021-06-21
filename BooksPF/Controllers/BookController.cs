@@ -36,8 +36,8 @@ namespace BooksPF.Controllers
         [HttpPut("edit")]
         public async Task<IActionResult> UpdateBook(Book book)
         {
-            await bookService.UpdateBook(book);
-            return Ok();
+            var updatedBook = await bookService.UpdateBook(book);
+            return Ok(updatedBook);
         }
 
         [HttpDelete("delete")]
