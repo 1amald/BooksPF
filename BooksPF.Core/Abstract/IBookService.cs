@@ -10,7 +10,7 @@ namespace BooksPF.Core.Abstract
         Task<IEnumerable<Book>> GetUserBooks(string customerName);
         Task<Book> AddBook(Book book);
         Task<Book> GetBookById(string id);
-        Task DeleteBook(string id);
+        Task DeleteBook(Book book);
         Task<Book> UpdateBook(Book book);
     }
 }

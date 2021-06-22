@@ -60,6 +60,7 @@ namespace BooksPF
 
             services.AddSingleton<TokenGenerator>();
             services.AddSingleton<IDbClient, DbClient>();
+            services.AddTransient<IFileService, FileService>();
             services.AddTransient<IBookService, BookService>();
             services.AddTransient<IUserService, UserService>();
             

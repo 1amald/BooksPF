@@ -4,10 +4,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DeleteBook, GetBooks } from '../services/books';
 import { EditBookModal } from './BookModal';
 
-export function BooksTable(){
+export default function BooksTable(){
     const books = useSelector(state => state.booksReducer.books);
     const dispatch = useDispatch();
-    
     useEffect(() => {
         GetBooks(dispatch);
     },[]);
@@ -22,7 +21,7 @@ export function BooksTable(){
                     <td>{n.holderName}</td>
                     <td><EditBookModal book = {n}/></td>
                     <td>
-                        <Button className = 'btn btn-danger' onClick ={() => DeleteBook(dispatch,n)} value ="Delete">Delete</Button>
+                        <Button className = 'btn btn-danger' onClick ={() => DeleteBook(dispatch,n)}>Delete</Button>
                     </td>
                 </tr>)
             }

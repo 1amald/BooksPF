@@ -24,26 +24,22 @@ namespace BooksPF.Core.Mongo
         {
             return await books.Find(b => b.HolderName == customerName).ToListAsync();
         }
-
         public async Task<Book> AddBook(Book book)
         {
             await books.InsertOneAsync(book);
             return book;
         }
-
         public async Task<Book> GetBookById(string id)
         {
             return await books.Find(b => b.Id == id).FirstOrDefaultAsync();
         }
-
-        public async Task DeleteBook(string id)
+        public async Task DeleteBook(Book book)
         {
-            await books.DeleteOneAsync(b => b.Id == id);
+            await books.DeleteOneAsync(b => b.Id == book.Id);
         }
-
         public async Task<Book> UpdateBook(Book book)
         {
-            await books.ReplaceOneAsync(b => b.Id == book.Id,book);
+            await books.ReplaceOneAsync(b => b.Id == book.Id && b.HolderName == book.HolderName,book);
             return book;
         }
     }

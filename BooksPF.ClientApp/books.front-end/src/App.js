@@ -1,16 +1,22 @@
 import React from 'react';
 import './App.css';
-import { BooksTable } from './components/BooksTable';
-import {NewBookModal} from './components/BookModal';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { MyBooks,AllBooks } from './components/BookLibrary';
+import { LoginForm } from './components/LoginForm';
+import { RegisterForm } from './components/RegisterForm';
 
 function App() {
   return (
-    <div className="App">
-      <div className ='content'>
-        <NewBookModal />
-        <BooksTable/>
+    <BrowserRouter>
+      <div className="App">
+        <div className='content'>
+          <Route path="/my" component={MyBooks} />
+          <Route path="/library" component={AllBooks} />
+          <Route path="/login" component={LoginForm} />
+          <Route path="/register" component={RegisterForm} />
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 

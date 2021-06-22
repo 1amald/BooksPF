@@ -8,7 +8,7 @@ export const NewBookModal = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     return <div>
-        <Button onClick={handleShow} className='btn btn-success'>New Book</Button>
+        <Button onClick={handleShow} className='btn btn-success' style={{width: '100%', minWidth: '400px'}}>New Book</Button>
         <BookModal book={null} handleFormSubmit={NewBook} show={show} handleClose={handleClose}/>
     </div>
 }
@@ -18,10 +18,10 @@ export const EditBookModal = ({ book }) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    return <div>
-        <Button onClick={handleShow} className='btn btn-warning'>Edit</Button>
+    return <span>
+        <Button onClick={handleShow} className='btn btn-warning button-actions'>Edit</Button>
         <BookModal book={book} handleFormSubmit={EditBook} show={show} handleClose={handleClose}/>
-    </div>
+    </span>
 }
 
 const BookModal = ({ book, handleFormSubmit,show,handleClose }) => {

@@ -8,6 +8,6 @@ export const api = axios.create({
 
 api.interceptors.request.use(function(config){
     config.headers['Content-type'] = 'application/json';
-    config.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImlhbWFsZCIsInN1YiI6IjYwY2JiOTcxYmM2NDQ2MDc4N2Y5MTdkYyIsImV4cCI6MTYyNDI0Mzk1MSwiaXNzIjoic2VydmVyIiwiYXVkIjoiY2xpZW50In0.Up6pwBL8ILK_K0lobeWYy6lXFyrHlQuuk1Yuw_b9uGc';
+    config.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImlhbWFsZCIsInN1YiI6IjYwY2JiOTcxYmM2NDQ2MDc4N2Y5MTdkYyIsImV4cCI6MTYyNDI2NDEwNiwiaXNzIjoic2VydmVyIiwiYXVkIjoiY2xpZW50In0.qPSzAmHVPKsNWMwacIutuVynlI49f2G2A2C8-hAgvgM';
     return config;
 })

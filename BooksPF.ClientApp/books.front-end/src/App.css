@@ -27,10 +27,53 @@
 }
 
 .content{
-  width: 70%;
+  width: 50%;
   margin: auto;
 }
 
+.login-div{
+  max-width: 400px;
+  margin: auto;
+  margin-top: 300px;
+  padding: 40px;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: darkgrey;
+}
+
+
+.div-book-row{
+  background-color:antiquewhite;
+  border-style: solid;
+  padding: 10px;
+  width: 100%;
+  min-width: 400px;
+  margin-top: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.div-actions{
+  display: inline;
+}
+.button-actions{
+  min-width: 70px;
+  margin: 3px;
+  height: 100%;
+  display: inline;
+}
+
+.div-author{
+  text-align: left;
+  font-size: 15px;
+}
+
+.div-title{
+  text-align: left;
+  font-size: 25px;
+  font-weight: 500;
+}
 
 @keyframes App-logo-float {
   0% {

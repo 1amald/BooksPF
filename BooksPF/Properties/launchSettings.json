@@ -18,7 +18,8 @@
         "CONNECTION_STRING": "mongodb+srv://iamald:pass123@cluster0.3oesf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
         "DATABASE_NAME": "BooksPF",
         "BOOKS_COLLECTION_NAME": "Books",
-        "USERS_COLLECTION_NAME": "Users"
+        "USERS_COLLECTION_NAME": "Users",
+        "FILES_COLLECTION_NAME": "Files"
       }
     },
     "BooksPF": {
@@ -32,7 +33,8 @@
         "CONNECTION_STRING": "mongodb+srv://iamald:pass123@cluster0.3oesf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
         "DATABASE_NAME": "BooksPF",
         "BOOKS_COLLECTION_NAME": "Books",
-        "USERS_COLLECTION_NAME": "Users"
+        "USERS_COLLECTION_NAME": "Users",
+        "FILES_COLLECTION_NAME": "Files"
       }
     }
   }
